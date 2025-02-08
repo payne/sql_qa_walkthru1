@@ -9,12 +9,30 @@ db.run("SELECT * FROM Artist LIMIT 10;")
 import getpass
 import os
 
-if not os.environ.get("ANTHROPIC_API_KEY"):
-  os.environ["ANTHROPIC_API_KEY"] = getpass.getpass("Enter API key for Anthropic: ")
+
+from langchain_community.chat_models import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+
+# Initialize the chat model with Mistral
+chat = ChatOllama(
+    model="mistral",  # Specify the Mistral model
+    base_url="http://localhost:11434",  # Default Ollama API endpoint
+)
+
+# Create messages for the chat
+messages = [
+    SystemMessage(content="You are a helpful assistant."),
+    HumanMessage(content="What is the capital of France?")
+]
+
+# Get the response
+response = chat.invoke(messages)
+print(response.content)
 
 from langchain.chat_models import init_chat_model
 
-llm = init_chat_model("claude-3-5-sonnet-latest", model_provider="anthropic")
+#llm = init_chat_model("mistral-large-latest", model_provider="mistralai")
+llm = init_chat_model("mistral", model_provider="ollama")
 
 
 from typing_extensions import TypedDict
