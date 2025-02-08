@@ -29,10 +29,14 @@ messages = [
 response = chat.invoke(messages)
 print(response.content)
 
+
 from langchain.chat_models import init_chat_model
 
-#llm = init_chat_model("mistral-large-latest", model_provider="mistralai")
-llm = init_chat_model("mistral", model_provider="ollama")
+llm = init_chat_model(
+    provider="ollama",
+    model="mistral",
+    api_base="http://localhost:11434"
+)
 
 
 from typing_extensions import TypedDict
@@ -75,4 +79,7 @@ def write_query(state: State):
     structured_llm = llm.with_structured_output(QueryOutput)
     result = structured_llm.invoke(prompt)
     return {"query": result["query"]}
+
+
+write_query({"question": "How many Employees are there?"})
 
